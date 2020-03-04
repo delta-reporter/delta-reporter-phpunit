@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<phpunit bootstrap="./vendor/autoload.php"
+>
+    <testsuites>
+        <testsuite name="tests suite 1 very simple">
+            <directory>./tests</directory>
+        </testsuite>
+    </testsuites>
+
+    <listeners>
+        <listener class="DeltaReporter\PHPUnitService" file="vendor/deltareporter/phpunit-client/src/PHPUnitService.php">
+            <arguments>
+                <string>http://localhost:5001</string>
+                <string>Delta Reporter</string>
+                <string>PHP Unit Tests</string>
+            </arguments>
+        </listener>
+    </listeners>
+</phpunit>

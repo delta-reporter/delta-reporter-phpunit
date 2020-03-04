@@ -1,0 +1,33 @@
+{
+  	"name": "deltareporter/phpunit-client",
+	"type" : "library",
+	"description" : "Delta Reporter service for PHPUnit tests",
+	"keywords" : [
+		"Report",
+		"Reporting",
+		"PHPUnit",
+		"Delta Reporter"
+	],
+	"homepage" : "https://github.com/deltareporter/delta-reporter-phpunit-client",
+	"license" : "MIT",
+	"authors" : [{
+			"name" : "Juan Negrier",
+			"email" : "juannegrier@gmail.com",
+			"role" : "Developer"
+		}
+	],
+  	"require": {
+		"guzzlehttp/guzzle" : "*",
+		"psr/http-message" : "*",
+		"symfony/yaml" : "*",
+    	"phpunit/phpunit": "^9"
+	},
+	"autoload": {
+        "psr-4": {
+            "DeltaReporter\\": "src"
+		},
+		"classmap": [
+            "src"
+        ]
+	}
+}
