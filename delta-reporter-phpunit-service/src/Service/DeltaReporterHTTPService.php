@@ -119,7 +119,7 @@ class DeltaReporterHTTPService
      */
     public static function createTestLaunch(string $launchName)
     {
-        $result = self::$client->post('launch', array(
+        $result = self::$client->post('api/v1/launch', array(
             'headers' => array(
                 'Content-Type' => 'application/json'
             ),
@@ -142,7 +142,7 @@ class DeltaReporterHTTPService
      */
     public static function createTestRun(string $testType)
     {
-        $result = self::$client->post('test_run', array(
+        $result = self::$client->post('api/v1/test_run', array(
             'headers' => array(
                 'Content-Type' => 'application/json'
             ),
@@ -166,7 +166,7 @@ class DeltaReporterHTTPService
      */
     public static function updateTestRun(string $runStatus)
     {
-        $result = self::$client->put('test_run', array(
+        $result = self::$client->put('api/v1/test_run', array(
             'headers' => array(
                 'Content-Type' => 'application/json'
             ),
@@ -190,7 +190,7 @@ class DeltaReporterHTTPService
      */
     public static function createTestSuiteHistory(string $name, string $test_type)
     {
-        $result = self::$client->post('test_suite_history', array(
+        $result = self::$client->post('api/v1/test_suite_history', array(
             'headers' => array(
                 'Content-Type' => 'application/json'
             ),
@@ -216,7 +216,7 @@ class DeltaReporterHTTPService
      */
     public static function updateTestSuiteHistory(string $test_suite_status)
     {
-        $result = self::$client->put('test_suite_history', array(
+        $result = self::$client->put('api/v1/test_suite_history', array(
             'headers' => array(
                 'Content-Type' => 'application/json'
             ),
@@ -248,7 +248,7 @@ class DeltaReporterHTTPService
      */
     public static function updateTestHistory(string $testStatus, array $data)
     {
-        $result = self::$client->put('test_history', array(
+        $result = self::$client->put('api/v1/test_history', array(
             'headers' => array(
                 'Content-Type' => 'application/json'
             ),
@@ -271,7 +271,7 @@ class DeltaReporterHTTPService
      */
     public static function createTestHistory(string $name)
     {
-        $result = self::$client->post('test_history', array(
+        $result = self::$client->post('api/v1/test_history', array(
             'headers' => array(
                 'Content-Type' => 'application/json'
             ),
