@@ -9,7 +9,7 @@
 		"Delta Reporter"
 	],
 	"homepage" : "https://github.com/deltareporter/delta-reporter-phpunit-client",
-	"license" : "MIT",
+	"license" : "Apache-2.0",
 	"authors" : [{
 			"name" : "Juan Negrier",
 			"email" : "juannegrier@gmail.com",

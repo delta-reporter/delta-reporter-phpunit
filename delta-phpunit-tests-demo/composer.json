@@ -1,7 +1,7 @@
 {
     "name": "deltareporter/phpunit-tests",
     "description": "Tests for Delta Reporter PHPUnit service",
-    "license": "MIT",
+    "license": "Apache-2.0",
     "authors": [
         {
             "name": "Juan  Negrier",
