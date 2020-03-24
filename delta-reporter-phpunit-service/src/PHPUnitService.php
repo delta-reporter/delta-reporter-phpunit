@@ -19,6 +19,9 @@ class PHPUnitService implements Framework\TestListener
     private $testSuiteStatus;
     private $testRunStatus;
 
+    private static $testSuiteCounter = 0;
+    private static $testSuitePath;
+
     /**
      * @var DeltaReporterHTTPService
      */
@@ -152,9 +155,14 @@ class PHPUnitService implements Framework\TestListener
     public function startTestSuite(\PHPUnit\Framework\TestSuite $suite): void
     {
         if (self::isNoNameSuite($suite)) {
-                $this->testSuiteStatus = "Successful";
-                $suiteName = $suite->getName();
-                $response = self::$httpService->createTestSuiteHistory($suiteName, $this->testType);
+                self::$testSuiteCounter++;
+                if (self::$testSuiteCounter == 1) {
+                    self::$testSuitePath = str_replace(getcwd(),"", $suite->getName());
+                } elseif (self::$testSuiteCounter == 2) {
+                    $this->testSuiteStatus = "Successful";
+                    $suiteName = self::$testSuitePath . ":" . $suite->getName();
+                    $response = self::$httpService->createTestSuiteHistory($suiteName, $this->testType);
+                }
         }
     }
 
@@ -165,7 +173,10 @@ class PHPUnitService implements Framework\TestListener
     public function endTestSuite(\PHPUnit\Framework\TestSuite $suite): void
     {
         if (self::isNoNameSuite($suite)) {
-            self::$httpService->updateTestSuiteHistory($this->testSuiteStatus);
+            self::$testSuiteCounter--;
+            if (self::$testSuiteCounter == 1) {
+                self::$httpService->updateTestSuiteHistory($this->testSuiteStatus);
+            }
         }
     }
 
@@ -186,6 +197,7 @@ class PHPUnitService implements Framework\TestListener
         $counter = 0;
         $fileAndLine = "";
         $errorType = "";
+        $fullTrace = "";
         while (!$foundedFirstMatch and $counter < $arraySize) {
             if (strpos($traceArray[$counter]["file"], $className) != false) {
                 $fileName = $traceArray[$counter]["file"];
@@ -203,8 +215,9 @@ class PHPUnitService implements Framework\TestListener
         $testStatus = 'Failed';
         $this->testSuiteStatus = "Failed";
         $this->testRunStatus = "Failed";
+        $fullTrace = $fileAndLine . "\n\n" . $errorMessage . "\n" . $errorType . "\n\n" . $trace;
 
-        self::$httpService->updateTestHistory($testStatus, $trace);
+        self::$httpService->updateTestHistory($testStatus, $fullTrace);
     }
 
     /**
@@ -224,6 +237,7 @@ class PHPUnitService implements Framework\TestListener
         $counter = 0;
         $fileAndLine = "";
         $errorType = "";
+        $fullTrace = "";
         while (!$foundedFirstMatch and $counter < $arraySize) {
             if (strpos($traceArray[$counter]["file"], $className) != false) {
                 $fileName = $traceArray[$counter]["file"];
@@ -239,8 +253,9 @@ class PHPUnitService implements Framework\TestListener
             $counter++;
         }
         $testStatus = 'Skipped';
+        $fullTrace = $fileAndLine . "\n\n" . $errorMessage . "\n" . $errorType . "\n\n" . $trace;
 
-        self::$httpService->updateTestHistory($testStatus, $trace);
+        self::$httpService->updateTestHistory($testStatus, $fullTrace);
     }
 
     /**
@@ -260,6 +275,7 @@ class PHPUnitService implements Framework\TestListener
         $counter = 0;
         $fileAndLine = "";
         $errorType = "";
+        $fullTrace = "";
         while (!$foundedFirstMatch and $counter < $arraySize) {
             if (strpos($traceArray[$counter]["file"], $className) != false) {
                 $fileName = $traceArray[$counter]["file"];
@@ -275,7 +291,8 @@ class PHPUnitService implements Framework\TestListener
             $counter++;
         }
         $testStatus = 'Incomplete';
+        $fullTrace = $fileAndLine . "\n\n" . $errorMessage . "\n" . $errorType . "\n\n" . $trace;
 
-        self::$httpService->updateTestHistory($testStatus, $trace);
+        self::$httpService->updateTestHistory($testStatus, $fullTrace);
     }
 }
