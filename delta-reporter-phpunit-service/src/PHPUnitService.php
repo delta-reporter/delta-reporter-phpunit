@@ -130,10 +130,7 @@ class PHPUnitService implements Framework\TestListener
     public function endTest(\PHPUnit\Framework\Test $test, float $time): void
     {
         if (!$test->getStatus()) {
-            $data = array(
-                'duration' => $time
-            );
-            self::$httpService->updateTestHistory('Passed', $data);
+            self::$httpService->updateTestHistory('Passed', '');
         }
     }
 
@@ -203,20 +200,11 @@ class PHPUnitService implements Framework\TestListener
             }
             $counter++;
         }
-        $data = array(
-            'error' => array(
-                'file' => $fileAndLine,
-                'type' => $errorType,
-                'message' => $errorMessage,
-                'trace' => $trace
-            ),
-            'duration' => $time
-        );
         $testStatus = 'Failed';
         $this->testSuiteStatus = "Failed";
         $this->testRunStatus = "Failed";
 
-        self::$httpService->updateTestHistory($testStatus, $data);
+        self::$httpService->updateTestHistory($testStatus, $trace);
     }
 
     /**
@@ -250,18 +238,9 @@ class PHPUnitService implements Framework\TestListener
             }
             $counter++;
         }
-        $data = array(
-            'error' => array(
-                'file' => $fileAndLine,
-                'type' => $errorType,
-                'message' => $errorMessage,
-                'trace' => $trace
-            ),
-            'duration' => $time
-        );
         $testStatus = 'Skipped';
 
-        self::$httpService->updateTestHistory($testStatus, $data);
+        self::$httpService->updateTestHistory($testStatus, $trace);
     }
 
     /**
@@ -295,17 +274,8 @@ class PHPUnitService implements Framework\TestListener
             }
             $counter++;
         }
-        $data = array(
-            'error' => array(
-                'file' => $fileAndLine,
-                'type' => $errorType,
-                'message' => $errorMessage,
-                'trace' => $trace
-            ),
-            'duration' => $time
-        );
         $testStatus = 'Incomplete';
 
-        self::$httpService->updateTestHistory($testStatus, $data);
+        self::$httpService->updateTestHistory($testStatus, $trace);
     }
 }
