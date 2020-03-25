@@ -133,7 +133,7 @@ class PHPUnitService implements Framework\TestListener
     public function endTest(\PHPUnit\Framework\Test $test, float $time): void
     {
         if (!$test->getStatus()) {
-            self::$httpService->updateTestHistory('Passed', '');
+            self::$httpService->updateTestHistory('Passed', '', '', '', '');
         }
     }
 
@@ -215,9 +215,8 @@ class PHPUnitService implements Framework\TestListener
         $testStatus = 'Failed';
         $this->testSuiteStatus = "Failed";
         $this->testRunStatus = "Failed";
-        $fullTrace = $fileAndLine . "\n\n" . $errorMessage . "\n" . $errorType . "\n\n" . $trace;
 
-        self::$httpService->updateTestHistory($testStatus, $fullTrace);
+        self::$httpService->updateTestHistory($testStatus, $trace, $fileAndLine, $errorMessage, $errorType);
     }
 
     /**
@@ -253,9 +252,8 @@ class PHPUnitService implements Framework\TestListener
             $counter++;
         }
         $testStatus = 'Skipped';
-        $fullTrace = $fileAndLine . "\n\n" . $errorMessage . "\n" . $errorType . "\n\n" . $trace;
 
-        self::$httpService->updateTestHistory($testStatus, $fullTrace);
+        self::$httpService->updateTestHistory($testStatus, $trace, $fileAndLine, $errorMessage, $errorType);
     }
 
     /**
@@ -291,8 +289,7 @@ class PHPUnitService implements Framework\TestListener
             $counter++;
         }
         $testStatus = 'Incomplete';
-        $fullTrace = $fileAndLine . "\n\n" . $errorMessage . "\n" . $errorType . "\n\n" . $trace;
 
-        self::$httpService->updateTestHistory($testStatus, $fullTrace);
+        self::$httpService->updateTestHistory($testStatus, $trace, $fileAndLine, $errorMessage, $errorType);
     }
 }

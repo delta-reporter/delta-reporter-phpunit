@@ -249,7 +249,7 @@ class DeltaReporterHTTPService
      *            - log trace
      * @return ResponseInterface - result of request
      */
-    public static function updateTestHistory(string $testStatus, string $trace)
+    public static function updateTestHistory(string $testStatus, string $trace, string $file, string $message, string $error_type)
     {
         $result = self::$client->put('api/v1/test_history', array(
             'headers' => array(
@@ -260,7 +260,9 @@ class DeltaReporterHTTPService
                 'end_datetime' => self::getTime(),
                 'test_status' => $testStatus,
                 'trace' => $trace,
-                'file' => NULL,
+                'file' => $file,
+                'message' => $message,
+                'error_type' => $error_type,
                 'retries' => NULL
             )
         ));
