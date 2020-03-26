@@ -19,6 +19,9 @@ class PHPUnitService implements Framework\TestListener
     private $testSuiteStatus;
     private $testRunStatus;
 
+    private static $testSuiteCounter = 0;
+    private static $testSuitePath;
+
     /**
      * @var DeltaReporterHTTPService
      */
@@ -130,10 +133,7 @@ class PHPUnitService implements Framework\TestListener
     public function endTest(\PHPUnit\Framework\Test $test, float $time): void
     {
         if (!$test->getStatus()) {
-            $data = array(
-                'duration' => $time
-            );
-            self::$httpService->updateTestHistory('Passed', $data);
+            self::$httpService->updateTestHistory('Passed', '', '', '', '');
         }
     }
 
@@ -155,9 +155,14 @@ class PHPUnitService implements Framework\TestListener
     public function startTestSuite(\PHPUnit\Framework\TestSuite $suite): void
     {
         if (self::isNoNameSuite($suite)) {
-                $this->testSuiteStatus = "Successful";
-                $suiteName = $suite->getName();
-                $response = self::$httpService->createTestSuiteHistory($suiteName, $this->testType);
+                self::$testSuiteCounter++;
+                if (self::$testSuiteCounter == 1) {
+                    self::$testSuitePath = str_replace(getcwd(),"", $suite->getName());
+                } elseif (self::$testSuiteCounter == 2) {
+                    $this->testSuiteStatus = "Successful";
+                    $suiteName = self::$testSuitePath . ":" . $suite->getName();
+                    $response = self::$httpService->createTestSuiteHistory($suiteName, $this->testType);
+                }
         }
     }
 
@@ -168,7 +173,10 @@ class PHPUnitService implements Framework\TestListener
     public function endTestSuite(\PHPUnit\Framework\TestSuite $suite): void
     {
         if (self::isNoNameSuite($suite)) {
-            self::$httpService->updateTestSuiteHistory($this->testSuiteStatus);
+            self::$testSuiteCounter--;
+            if (self::$testSuiteCounter == 1) {
+                self::$httpService->updateTestSuiteHistory($this->testSuiteStatus);
+            }
         }
     }
 
@@ -189,6 +197,7 @@ class PHPUnitService implements Framework\TestListener
         $counter = 0;
         $fileAndLine = "";
         $errorType = "";
+        $fullTrace = "";
         while (!$foundedFirstMatch and $counter < $arraySize) {
             if (strpos($traceArray[$counter]["file"], $className) != false) {
                 $fileName = $traceArray[$counter]["file"];
@@ -203,20 +212,11 @@ class PHPUnitService implements Framework\TestListener
             }
             $counter++;
         }
-        $data = array(
-            'error' => array(
-                'file' => $fileAndLine,
-                'type' => $errorType,
-                'message' => $errorMessage,
-                'trace' => $trace
-            ),
-            'duration' => $time
-        );
         $testStatus = 'Failed';
         $this->testSuiteStatus = "Failed";
         $this->testRunStatus = "Failed";
 
-        self::$httpService->updateTestHistory($testStatus, $data);
+        self::$httpService->updateTestHistory($testStatus, $trace, $fileAndLine, $errorMessage, $errorType);
     }
 
     /**
@@ -236,6 +236,7 @@ class PHPUnitService implements Framework\TestListener
         $counter = 0;
         $fileAndLine = "";
         $errorType = "";
+        $fullTrace = "";
         while (!$foundedFirstMatch and $counter < $arraySize) {
             if (strpos($traceArray[$counter]["file"], $className) != false) {
                 $fileName = $traceArray[$counter]["file"];
@@ -250,18 +251,9 @@ class PHPUnitService implements Framework\TestListener
             }
             $counter++;
         }
-        $data = array(
-            'error' => array(
-                'file' => $fileAndLine,
-                'type' => $errorType,
-                'message' => $errorMessage,
-                'trace' => $trace
-            ),
-            'duration' => $time
-        );
         $testStatus = 'Skipped';
 
-        self::$httpService->updateTestHistory($testStatus, $data);
+        self::$httpService->updateTestHistory($testStatus, $trace, $fileAndLine, $errorMessage, $errorType);
     }
 
     /**
@@ -281,6 +273,7 @@ class PHPUnitService implements Framework\TestListener
         $counter = 0;
         $fileAndLine = "";
         $errorType = "";
+        $fullTrace = "";
         while (!$foundedFirstMatch and $counter < $arraySize) {
             if (strpos($traceArray[$counter]["file"], $className) != false) {
                 $fileName = $traceArray[$counter]["file"];
@@ -295,17 +288,8 @@ class PHPUnitService implements Framework\TestListener
             }
             $counter++;
         }
-        $data = array(
-            'error' => array(
-                'file' => $fileAndLine,
-                'type' => $errorType,
-                'message' => $errorMessage,
-                'trace' => $trace
-            ),
-            'duration' => $time
-        );
         $testStatus = 'Incomplete';
 
-        self::$httpService->updateTestHistory($testStatus, $data);
+        self::$httpService->updateTestHistory($testStatus, $trace, $fileAndLine, $errorMessage, $errorType);
     }
 }

@@ -198,7 +198,8 @@ class DeltaReporterHTTPService
                 'name' => $name,
                 'test_type' => $test_type,
                 'test_run_id' => self::$testRunID,
-                'start_datetime' => self::getTime()
+                'start_datetime' => self::getTime(),
+                'project' => self::$projectName
             )
         ));
         $array = json_decode($result->getBody()->getContents());
@@ -244,9 +245,11 @@ class DeltaReporterHTTPService
      *
      * @param string $testStatus
      *            - test status
+     * @param string $trace
+     *            - log trace
      * @return ResponseInterface - result of request
      */
-    public static function updateTestHistory(string $testStatus, array $data)
+    public static function updateTestHistory(string $testStatus, string $trace, string $file, string $message, string $error_type)
     {
         $result = self::$client->put('api/v1/test_history', array(
             'headers' => array(
@@ -256,7 +259,11 @@ class DeltaReporterHTTPService
                 'test_history_id' => self::$testHistoryID,
                 'end_datetime' => self::getTime(),
                 'test_status' => $testStatus,
-                'data' => $data
+                'trace' => $trace,
+                'file' => $file,
+                'message' => $message,
+                'error_type' => $error_type,
+                'retries' => NULL
             )
         ));
         return $result;
@@ -280,6 +287,7 @@ class DeltaReporterHTTPService
                 'start_datetime' => self::getTime(),
                 'test_suite_id' => self::$testSuiteID,
                 'test_run_id' => self::$testRunID,
+                'test_suite_history_id' => self::$testSuiteHistoryID
             )
         ));
         $array = json_decode($result->getBody()->getContents());
