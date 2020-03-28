@@ -10,7 +10,7 @@ Installing this service is simple as adding it as a dependency to composer
 ```json
   "minimum-stability": "dev",
   "require-dev": {
-    "deltareporter/phpunit-client" : "*"
+    "delta-reporter/phpunit-client" : "*"
   },
 ```
 
@@ -20,7 +20,7 @@ Installing this service is simple as adding it as a dependency to composer
 
 ```xml
     <listeners>
-        <listener class="DeltaReporter\PHPUnitService" file="vendor/deltareporter/phpunit-client/src/PHPUnitService.php">
+        <listener class="DeltaReporter\PHPUnitService" file="vendor/delta-reporter/phpunit-client/src/PHPUnitService.php">
             <arguments>
                 <string>HOST URL</string>
                 <string>PROJECT NAME</string>

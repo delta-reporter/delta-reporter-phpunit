@@ -8,7 +8,7 @@
     </testsuites>
 
     <listeners>
-        <listener class="DeltaReporter\PHPUnitService" file="vendor/deltareporter/phpunit-client/src/PHPUnitService.php">
+        <listener class="DeltaReporter\PHPUnitService" file="vendor/delta-reporter/phpunit-client/src/PHPUnitService.php">
             <arguments>
                 <string>http://localhost:5001</string>
                 <string>Delta Reporter</string>
