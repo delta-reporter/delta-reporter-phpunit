@@ -13,7 +13,7 @@
     "repositories": [
         {
             "type": "path",
-            "url": "../delta-reporter-phpunit-service",
+            "url": "..",
             "options": {
                 "symlink": true
             }
