@@ -1,5 +1,5 @@
 {
-  	"name": "deltareporter/phpunit-client",
+  	"name": "delta-reporter/phpunit-client",
 	"type" : "library",
 	"description" : "Delta Reporter service for PHPUnit tests",
 	"keywords" : [
@@ -8,7 +8,7 @@
 		"PHPUnit",
 		"Delta Reporter"
 	],
-	"homepage" : "https://github.com/deltareporter/delta-reporter-phpunit-client",
+	"homepage" : "https://github.com/delta-reporter/delta-reporter-phpunit",
 	"license" : "Apache-2.0",
 	"authors" : [{
 			"name" : "Juan Negrier",
