@@ -33,8 +33,12 @@ class PHPUnitService implements Framework\TestListener
      * @param $projectName
      * @param $testType
      */
-    public function __construct($host, $projectName, $testType)
+    public function __construct(string $host, string $projectName, string $testType, bool $enabled)
     {
+        $this->enabled = $enabled;
+        if (!$this->enabled) {
+            return;
+        }
         $this->host = $host;
         $this->projectName = $projectName;
         $this->testType = $testType;
@@ -53,6 +57,9 @@ class PHPUnitService implements Framework\TestListener
      */
     public function __destruct()
     {
+        if (!$this->enabled) {
+            return;
+        }
         $status = self::getStatusByBool(true);
         $HTTPResult = self::$httpService->updateTestRun($this->testRunStatus);
     }
@@ -62,6 +69,9 @@ class PHPUnitService implements Framework\TestListener
      */
     private function configureClient()
     {
+        if (!$this->enabled) {
+            return;
+        }
         $baseURI = sprintf($this->host);
         DeltaReporterHTTPService::configureClient($baseURI, $this->host, $this->projectName);
         self::$httpService = new DeltaReporterHTTPService();
@@ -73,6 +83,9 @@ class PHPUnitService implements Framework\TestListener
      */
     private static function getStatusByBool(bool $isFailedItem)
     {
+        if (!$this->enabled) {
+            return;
+        }
         if ($isFailedItem) {
             $stringItemStatus = 'FAILED';
         } else {
@@ -89,6 +102,9 @@ class PHPUnitService implements Framework\TestListener
      */
     private static function isNoNameSuite(\PHPUnit\Framework\TestSuite $suite):bool
     {
+        if (!$this->enabled) {
+            return 0;
+        }
         return $suite->getName() !== "";
     }
 
@@ -132,6 +148,9 @@ class PHPUnitService implements Framework\TestListener
      */
     public function endTest(\PHPUnit\Framework\Test $test, float $time): void
     {
+        if (!$this->enabled) {
+            return;
+        }
         if (!$test->getStatus()) {
             self::$httpService->updateTestHistory('Passed', '', '', '', '');
         }
@@ -143,6 +162,9 @@ class PHPUnitService implements Framework\TestListener
      */
     public function startTest(\PHPUnit\Framework\Test $test): void
     {
+        if (!$this->enabled) {
+            return;
+        }
         $this->testName = $test->getName();
 
         $response = self::$httpService->createTestHistory($this->testName);
@@ -154,6 +176,9 @@ class PHPUnitService implements Framework\TestListener
      */
     public function startTestSuite(\PHPUnit\Framework\TestSuite $suite): void
     {
+        if (!$this->enabled) {
+            return;
+        }
         if (self::isNoNameSuite($suite)) {
                 self::$testSuiteCounter++;
                 if (self::$testSuiteCounter == 1) {
@@ -172,6 +197,9 @@ class PHPUnitService implements Framework\TestListener
      */
     public function endTestSuite(\PHPUnit\Framework\TestSuite $suite): void
     {
+        if (!$this->enabled) {
+            return;
+        }
         if (self::isNoNameSuite($suite)) {
             self::$testSuiteCounter--;
             if (self::$testSuiteCounter == 1) {
@@ -188,6 +216,9 @@ class PHPUnitService implements Framework\TestListener
      */
     public function addFailure(\PHPUnit\Framework\Test $test, \PHPUnit\Framework\AssertionFailedError $e, float $time): void
     {
+        if (!$this->enabled) {
+            return;
+        }
         $errorMessage = $e->toString();
         $trace = $e->getTraceAsString();
         $className = get_class($test);
@@ -227,6 +258,9 @@ class PHPUnitService implements Framework\TestListener
      */
     public function addSkippedTest(\PHPUnit\Framework\Test $test, \Throwable $t, float $time): void
     {
+        if (!$this->enabled) {
+            return;
+        }
         $errorMessage = $t->toString();
         $trace = $t->getTraceAsString();
         $className = get_class($test);
@@ -264,6 +298,9 @@ class PHPUnitService implements Framework\TestListener
      */
     public function addIncompleteTest(\PHPUnit\Framework\Test $test, \Throwable $t, float $time): void
     {
+        if (!$this->enabled) {
+            return;
+        }
         $errorMessage = $t->toString();
         $trace = $t->getTraceAsString();
         $className = get_class($test);
