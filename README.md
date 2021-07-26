@@ -25,6 +25,7 @@ Installing this service is simple as adding it as a dependency to composer
                 <string>HOST URL</string>
                 <string>PROJECT NAME</string>
                 <string>TEST TYPE</string>
+                <boolean>ENABLED</boolean>
             </arguments>
         </listener>
     </listeners>
