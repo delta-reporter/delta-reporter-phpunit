@@ -83,9 +83,6 @@ class PHPUnitService implements Framework\TestListener
      */
     private static function getStatusByBool(bool $isFailedItem)
     {
-        if (!$this->enabled) {
-            return;
-        }
         if ($isFailedItem) {
             $stringItemStatus = 'FAILED';
         } else {
@@ -102,9 +99,6 @@ class PHPUnitService implements Framework\TestListener
      */
     private static function isNoNameSuite(\PHPUnit\Framework\TestSuite $suite):bool
     {
-        if (!$this->enabled) {
-            return 0;
-        }
         return $suite->getName() !== "";
     }
 

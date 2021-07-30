@@ -5,6 +5,7 @@ namespace DeltaReporter\Service;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\MultipartStream;
 use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Psr7;
 use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\Yaml\Yaml;
 
@@ -293,6 +294,38 @@ class DeltaReporterHTTPService
         $array = json_decode($result->getBody()->getContents());
         self::$testID = $array->{'test_id'};
         self::$testHistoryID = $array->{'test_history_id'};
+        return $result;
+    }
+
+    /**
+     * Save save file for test
+     *
+     * @param string $file_path
+     *            - file path to collect file
+     * @param string $type
+     *            - type of file, could be 'img' or 'video'
+     * @param string $description
+     *            - description of the uploaded file
+     * @return ResponseInterface - result of request
+     */
+    public static function saveFileForTest(string $file_path, string $type, string $description)
+    {
+        $result = self::$client->post('api/v1/file_receiver_test_history/' . self::$testHistoryID, array(
+            'multipart' => [
+                [
+                    'name'     => 'type',
+                    'contents' => $type
+                ],
+                [
+                    'name'     => 'description',
+                    'contents' => $description
+                ],
+                [
+                    'name'     => 'file',
+                    'contents' => Psr7\Utils::tryFopen($file_path, 'r')
+                ],
+            ]
+        ));
         return $result;
     }
 }
