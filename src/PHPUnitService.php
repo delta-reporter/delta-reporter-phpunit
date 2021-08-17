@@ -133,6 +133,16 @@ class PHPUnitService implements Framework\TestListener
     public function addError(\PHPUnit\Framework\Test $test, \Throwable $t, float $time): void
     {
         // TODO: Implement addError() method.
+        if (!$this->enabled) {
+            return;
+        }
+        $errorMessage = 'ERROR: ' . $t;
+        $trace = $t;
+        $fileAndLine = $t;
+        $errorType = "ERROR";
+        $testStatus = 'Failed';
+
+        self::$httpService->updateTestHistory($testStatus, $trace, $fileAndLine, $errorMessage, $errorType);
     }
 
     /**
