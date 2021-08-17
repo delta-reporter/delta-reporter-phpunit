@@ -138,7 +138,7 @@ class PHPUnitService implements Framework\TestListener
         }
         $errorMessage = 'ERROR: ' . $t;
         $trace = $t;
-        $fileAndLine = $t;
+        $fileAndLine = "ERROR";
         $errorType = "ERROR";
         $testStatus = 'Failed';
 
