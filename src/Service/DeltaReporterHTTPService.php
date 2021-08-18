@@ -135,6 +135,19 @@ class DeltaReporterHTTPService
     }
 
     /**
+     * Set test launch
+     *
+     * @param string $launchID
+     *            - test launch id
+     * @return void
+     */
+    public static function setTestLaunchID(string $launchID)
+    {
+
+        self::$launchID = $launchID;
+    }
+
+    /**
      * Create test run
      *
      * @param string $testType

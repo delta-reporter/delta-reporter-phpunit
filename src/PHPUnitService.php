@@ -47,6 +47,8 @@ class PHPUnitService implements Framework\TestListener
         $this->configureClient();
         if (!$this->launchID) {
             self::$httpService->createTestLaunch("PHPUnit Launch " . date('Y-m-d\TH:i:s'));
+        } else {
+            self::$httpService->setTestLaunchID($this->launchID);
         }
         $this->testRunStatus = "Passed";
         self::$httpService->createTestRun($this->testType);
